@@ -27,13 +27,16 @@ local num_terms = 15
 local fib_table = generate_fibonacci(num_terms)
 
 -- Print the generated sequence from the table
-print("Fibonacci sequence up to term " .. num_terms .. ":")
-for index, value in ipairs(fib_table) do
-	print("Term " .. index .. ": " .. value)
-end
+-- print("Fibonacci sequence up to term " .. num_terms .. ":")
+-- for index, value in ipairs(fib_table) do
+-- 	print("Term " .. index .. ": " .. value)
+-- end
 
 -- Example of accessing a specific number from the table
-local term_index = 10
-if fib_table[term_index] ~= nil then
-	print("\nThe Fibonacci number at index " .. term_index .. " is: " .. fib_table[term_index])
-end
+-- local term_index = 10
+-- if fib_table[term_index] ~= nil then
+-- 	print("\nThe Fibonacci number at index " .. term_index .. " is: " .. fib_table[term_index])
+-- end
+
+local result = "The Fibonacci number at index " .. #fib_table .. " is: " .. fib_table[#fib_table]
+return result
