@@ -39,4 +39,5 @@ local fib_table = generate_fibonacci(num_terms)
 -- end
 
 local result = "The Fibonacci number at index " .. #fib_table .. " is: " .. fib_table[#fib_table]
+print("look mama I'm printing", "I'm printing hard")
 return result

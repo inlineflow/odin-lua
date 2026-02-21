@@ -54,9 +54,18 @@ Lua_Print_Data :: struct {
   _context: ^runtime.Context,
 }
 
-lua_vm_print :: proc "c" (L: ^lua.State) -> int {
+lua_upvalueindex :: proc "contextless" (i: i32) -> i32 {
+  return lua.GLOBALSINDEX - i
+}
+
+lua_vm_print :: proc "c" (L: ^lua.State) -> i32 {
   nargs := lua.gettop(L)
-  // log.debug(nargs)
+  print_data := cast(^Lua_Print_Data)lua.touserdata(L,  lua_upvalueindex(1))
+  context = print_data._context^
+  msg := lua.L_checkstring(L, 1)
+  log.debug("print function from C")
+  log.debugf("number of arguments passed to print: %v", nargs)
+  log.debug(msg)
   return 0
 }
 
@@ -69,6 +78,15 @@ start_lua_vm :: proc(lua_vm_data: Lua_VM_Data) {
   L := lua.newstate(lua_allocator, &mem_data)
   defer lua.close(L)
   lua.L_openlibs(L)
+
+  lua_print_data := Lua_Print_Data {
+    _context = &_context,
+  }
+
+  lua.pushlightuserdata(L, &lua_print_data)
+  lua.pushcclosure(L, lua_vm_print, 1)
+  lua.setglobal(L, "print")
+
   for {
     cmd, ok := chan.recv(lua_vm_data.commands_chan)
     if !ok {
