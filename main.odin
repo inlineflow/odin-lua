@@ -13,15 +13,6 @@ import "core:log"
 import "core:time"
 import vmem "core:mem/virtual"
 
-Lua_Print_Data :: struct {
-  _context: ^runtime.Context,
-}
-
-lua_vm_print :: proc "c" (L: ^lua.State) -> int {
-  nargs := lua.gettop(L)
-  // log.debug(nargs)
-  return 0
-}
 
 lua_allocator :: proc "c" (ud: rawptr, ptr: rawptr, osize, nsize: c.size_t) -> (buf: rawptr) {
 	old_size := int(osize)
@@ -59,6 +50,17 @@ Lua_VM_Data :: struct {
   source: string,
 }
 
+Lua_Print_Data :: struct {
+  _context: ^runtime.Context,
+}
+
+lua_vm_print :: proc "c" (L: ^lua.State) -> int {
+  nargs := lua.gettop(L)
+  // log.debug(nargs)
+  return 0
+}
+
+// TODO: Store a pointer to Lua_Print_Data in an upvalue and dereference it in the print function to use `log.debug` procedure
 start_lua_vm :: proc(lua_vm_data: Lua_VM_Data) {
   _context := context
   mem_data := Mem_Data{
